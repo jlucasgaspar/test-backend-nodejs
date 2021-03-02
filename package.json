@@ -13,6 +13,7 @@
     "dev:server": "ts-node-dev -r --transpile-only --ignore-watch node_modules src/server.ts"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.3",
     "@types/jest": "^26.0.20",
     "@types/mongodb": "^3.6.8",
     "@types/node": "^14.14.31",
