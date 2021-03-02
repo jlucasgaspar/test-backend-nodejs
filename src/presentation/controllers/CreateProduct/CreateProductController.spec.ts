@@ -1,7 +1,7 @@
 import { CreateProductController } from './CreateProductController';
 import { fakeProductRequest } from './constants';
 import { badRequestResponse } from '../../helpers';
-import { InvalidParamError, MissingParamError } from '../../errors';
+import { InvalidParamError, MissingParamError, ServerError } from '../../errors';
 import { ICreateProduct, ICreateProductRequest } from '../../../domain/useCases/ICreateProduct';
 import { IProduct } from '../../../domain/models/IProduct';
 
@@ -48,5 +48,28 @@ describe('CreateProduct Controller', () => {
     test('Should return 400 if no price is string', async () => {
         const response = await createProduct_sut.handle(fakeProductRequest.priceIsString);
         expect(response).toEqual(badRequestResponse(new InvalidParamError('preço não é tipo number.')));
+    });
+
+    test('Should call CreateProduct UseCase with correct values', async () => {
+        const createUserSpy = jest.spyOn(fakeCreateProductUseCase, 'create');
+
+        await createProduct_sut.handle(fakeProductRequest.valid)
+
+        expect(createUserSpy).toHaveBeenCalledWith({
+            title: fakeProductRequest.valid.body.title,
+            description: fakeProductRequest.valid.body.description,
+            categoryId: fakeProductRequest.valid.body.categoryId,
+            price: fakeProductRequest.valid.body.price
+        })
+    });
+
+    test('Should return 500 if CreateProduct UseCase throws', async () => {
+        jest.spyOn(fakeCreateProductUseCase, 'create').mockImplementationOnce(async () => {
+            return new Promise((resolve, reject) => reject(new ServerError(null)));
+        });
+
+        const response = await createProduct_sut.handle(fakeProductRequest.valid);
+
+        expect(response.statusCode).toBe(500);
     });
 });
