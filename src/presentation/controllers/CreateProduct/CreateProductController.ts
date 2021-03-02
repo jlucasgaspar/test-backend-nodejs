@@ -1,23 +1,18 @@
 import { MissingParamError } from '../../errors';
-import { badRequestResponse } from '../../helpers';
+import { badRequestResponse, ensureRequiredFieldsAreNotEmpty } from '../../helpers';
 import { IController, IHttpRequest, IHttpResponse } from '../../protocols';
 
 export class CreateProductController implements IController {
     public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-        if (!httpRequest.body.title) {
-            return badRequestResponse(new MissingParamError('title'))
-        }
+        const requiredFields = ['title', 'categoryId', 'description', 'price']
 
-        if (!httpRequest.body.categoryId) {
-            return badRequestResponse(new MissingParamError('categoryId'))
-        }
+        const emptyField = ensureRequiredFieldsAreNotEmpty({
+            httpRequest: httpRequest,
+            requiredFields: requiredFields
+        })
 
-        if (!httpRequest.body.description) {
-            return badRequestResponse(new MissingParamError('description'))
-        }
-
-        if (!httpRequest.body.price) {
-            return badRequestResponse(new MissingParamError('price'))
+        if (emptyField) {
+            return badRequestResponse(new MissingParamError(emptyField));
         }
 
         return new Promise(resolve => resolve({ statusCode: 200, body: null }))
