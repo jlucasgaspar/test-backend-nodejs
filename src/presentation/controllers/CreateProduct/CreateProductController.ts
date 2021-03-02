@@ -1,5 +1,5 @@
 import { MissingParamError, InvalidParamError } from '../../errors';
-import { badRequestResponse, ensureRequiredFieldsAreNotEmpty } from '../../helpers';
+import { badRequestResponse, ensureRequiredFieldsAreNotEmpty, serverErrorResponse } from '../../helpers';
 import { IController, IHttpRequest, IHttpResponse } from '../../protocols';
 import { ICreateProduct } from '../../../domain/useCases/ICreateProduct';
 
@@ -11,25 +11,29 @@ export class CreateProductController implements IController {
     }
 
     public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-        const requiredFields = ['title', 'categoryId', 'description', 'price']
+        try {
+            const requiredFields = ['title', 'categoryId', 'description', 'price']
 
-        const emptyField = ensureRequiredFieldsAreNotEmpty({
-            httpRequest: httpRequest,
-            requiredFields: requiredFields
-        })
+            const emptyField = ensureRequiredFieldsAreNotEmpty({
+                httpRequest: httpRequest,
+                requiredFields: requiredFields
+            })
 
-        if (emptyField) {
-            return badRequestResponse(new MissingParamError(emptyField));
+            if (emptyField) {
+                return badRequestResponse(new MissingParamError(emptyField));
+            }
+
+            const { title, description, categoryId, price } = httpRequest.body;
+
+            if (typeof price !== 'number') {
+                return badRequestResponse(new InvalidParamError('preço não é tipo number.'))
+            }
+
+            const product = await this.createProduct.create({ title, description, categoryId, price });
+
+            return new Promise(resolve => resolve({ statusCode: 200, body: null }))
+        } catch (error) {
+            return serverErrorResponse(error)
         }
-
-        const { title, description, categoryId, price } = httpRequest.body;
-
-        if (typeof price !== 'number') {
-            return badRequestResponse(new InvalidParamError('preço não é tipo number.'))
-        }
-
-        const product = await this.createProduct.create({ title, description, categoryId, price });
-
-        return new Promise(resolve => resolve({ statusCode: 200, body: null }))
     }
 }
