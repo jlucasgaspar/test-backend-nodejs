@@ -1,5 +1,5 @@
 import { ICategory } from '../models/ICategory';
 
-export interface ICreateProduct {
-    create(productData: Omit<ICategory, 'id'>): Promise<ICategory>;
+export interface ICreateCategory {
+    create(CategoryData: Omit<ICategory, 'id'>): Promise<ICategory>;
 }
