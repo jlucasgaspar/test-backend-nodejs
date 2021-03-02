@@ -12,6 +12,14 @@ export class CreateProductController implements IController {
             return badRequestResponse(new MissingParamError('categoryId'))
         }
 
+        if (!httpRequest.body.description) {
+            return badRequestResponse(new MissingParamError('description'))
+        }
+
+        if (!httpRequest.body.price) {
+            return badRequestResponse(new MissingParamError('price'))
+        }
+
         return new Promise(resolve => resolve({ statusCode: 200, body: null }))
     }
 }
