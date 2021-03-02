@@ -1,3 +1,3 @@
-import { jsonMiddleware } from '../protocols/IExpress';
+import { json } from 'express'
 
-export const bodyParser = jsonMiddleware;
+export const bodyParser = json()

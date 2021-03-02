@@ -9,4 +9,4 @@ export type IRequestHandler = RequestHandler;
 
 export const app = express();
 export const router = Router();
-export const jsonMiddleware = json();
+export const jsonMiddleware = json;
