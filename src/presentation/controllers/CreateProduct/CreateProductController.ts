@@ -1,5 +1,5 @@
 import { MissingParamError, InvalidParamError } from '../../errors';
-import { badRequestResponse, ensureRequiredFieldsAreNotEmpty, serverErrorResponse } from '../../helpers';
+import { badRequestResponse, ensureRequiredFieldsAreNotEmpty, okResponse, serverErrorResponse } from '../../helpers';
 import { IController, IHttpRequest, IHttpResponse } from '../../protocols';
 import { ICreateProduct } from '../../../domain/useCases/ICreateProduct';
 
@@ -26,14 +26,15 @@ export class CreateProductController implements IController {
             const { title, description, categoryId, price } = httpRequest.body;
 
             if (typeof price !== 'number') {
-                return badRequestResponse(new InvalidParamError('preço não é tipo number.'))
+                return badRequestResponse(new InvalidParamError('preço não é tipo number.'));
             }
 
             const product = await this.createProduct.create({ title, description, categoryId, price });
 
-            return new Promise(resolve => resolve({ statusCode: 200, body: null }))
+            return okResponse(product);
         } catch (error) {
-            return serverErrorResponse(error)
+            console.log(error);
+            return serverErrorResponse(error);
         }
     }
 }
