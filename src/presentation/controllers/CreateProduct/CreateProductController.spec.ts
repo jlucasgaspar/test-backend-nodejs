@@ -12,7 +12,11 @@ describe('CreateProduct Controller', () => {
 
     test('Should return 400 if no title is provided', async () => {
         const response = await createProduct_sut.handle(fakeProductRequest.withoutTitle);
-
         expect(response).toEqual(badRequestResponse(new MissingParamError('title')));
+    });
+
+    test('Should return 400 if no categoryId is provided', async () => {
+        const response = await createProduct_sut.handle(fakeProductRequest.withoutCategoryId);
+        expect(response).toEqual(badRequestResponse(new MissingParamError('categoryId')));
     });
 });
