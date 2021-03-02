@@ -1,5 +1,5 @@
 import { Express, Request, Response, NextFunction, RequestHandler } from 'express';
-import express, { Router } from 'express';
+import express, { Router, json } from 'express';
 
 export type IExpress =  Express;
 export type IRequest = Request;
@@ -9,3 +9,4 @@ export type IRequestHandler = RequestHandler;
 
 export const app = express();
 export const router = Router();
+export const jsonMiddleware = json();

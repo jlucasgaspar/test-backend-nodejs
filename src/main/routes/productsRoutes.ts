@@ -3,3 +3,5 @@ import { adaptRoute } from '../adapters/routeAdapter';
 import { makeCreateProductController } from '../factories/makeCreateProductController';
 
 router.post('/products', adaptRoute(makeCreateProductController()))
+
+export const productsRouter = router;
