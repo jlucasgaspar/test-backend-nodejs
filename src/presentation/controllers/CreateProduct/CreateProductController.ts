@@ -15,6 +15,10 @@ export class CreateProductController implements IController {
             return badRequestResponse(new MissingParamError(emptyField));
         }
 
+        const { title, description, categoryId, price } = httpRequest.body
+
+        
+
         return new Promise(resolve => resolve({ statusCode: 200, body: null }))
     }
 }

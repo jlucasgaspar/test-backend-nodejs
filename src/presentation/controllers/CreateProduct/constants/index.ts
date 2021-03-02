@@ -1,1 +1,1 @@
-export * from './testRequests';
+export * from './possiblesProductRequest';
