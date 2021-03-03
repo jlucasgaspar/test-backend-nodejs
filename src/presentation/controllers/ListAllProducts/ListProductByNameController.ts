@@ -1,21 +1,19 @@
 import { okResponse, serverErrorResponse } from '../../helpers';
-import { IController, IHttpRequest, IHttpResponse } from '../../protocols';
+import { IController, IHttpResponse } from '../../protocols';
 import { IListProducts } from '../../../domain/useCases/IListProducts';
 
-export class ListProductByNameController implements IController {
+export class ListAllProducts implements IController {
     private readonly listProducts: IListProducts;
 
     constructor(listProducts: IListProducts) {
         this.listProducts = listProducts;
     }
 
-    public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
+    public async handle(): Promise<IHttpResponse> {
         try{
-            const { title } = httpRequest.body;
+            const products = await this.listProducts.listAll();
 
-            const product = await this.listProducts.listByTitle(title);
-
-            return okResponse(product);
+            return okResponse(products);
         } catch (error) {
             console.log(error);
             return serverErrorResponse(error);

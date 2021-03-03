@@ -20,4 +20,12 @@ export class MongoProductsRepository implements IProductsRepository {
 
         return result;
     }
+
+    public async getAll(): Promise<Array<IProduct | null>> {
+        const productsCollection = await MongoHelper.getCollection('products');
+
+        const result = await productsCollection.find({}).toArray();
+
+        return result;
+    }
 }
