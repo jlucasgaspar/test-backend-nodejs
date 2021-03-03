@@ -3,22 +3,34 @@ import { ICreateProductRequest } from '../../../domain/useCases/ICreateProduct';
 import { IProductsRepository } from '../../protocols/IProductsRepository';
 import { DbCreateProduct } from './DbCreateProduct';
 import { fakeProductRequest } from './constants'
-import { request } from 'http';
+import { MongoProductsRepository } from '../../../infra/db/mongodb/ProductsRepository/ProductRepository';
 
-let dbCreateProduct_sut: DbCreateProduct;
+let mongodbProductRepositoy: MongoProductsRepository;
 let fakeProductsRepository: IProductsRepository;
+let dbCreateProduct_sut: DbCreateProduct;
 
-class FakeUsersRepository implements IProductsRepository {
+class FakeProductsRepository implements IProductsRepository {
+    private readonly mongodbProductRepositoy: MongoProductsRepository;
+
+    constructor(mongodbProductRepositoy: MongoProductsRepository) {
+        this.mongodbProductRepositoy = mongodbProductRepositoy;
+    }
+
     public async save(productData: ICreateProductRequest): Promise<IProduct> {
         const productWithId = Object.assign({}, productData, { id: 'valid_id' });
 
         return new Promise(resolve => resolve(productWithId));
     }
+
+    public async list(): Promise<Array<IProduct>> {
+        
+    }
 }
 
 describe('DbCreateProduct UseCase', () => {
     beforeAll(() => {
-        fakeProductsRepository = new FakeUsersRepository();
+        mongodbProductRepositoy = new MongoProductsRepository();
+        fakeProductsRepository = new FakeProductsRepository(mongodbProductRepositoy);
         dbCreateProduct_sut = new DbCreateProduct(fakeProductsRepository);
     });
 

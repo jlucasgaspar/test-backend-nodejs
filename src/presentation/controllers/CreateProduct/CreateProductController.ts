@@ -12,12 +12,12 @@ export class CreateProductController implements IController {
 
     public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
         try {
-            const requiredFields = ['title', 'categoryId', 'description', 'price']
+            const requiredFields = ['title', 'categoryId', 'description', 'price'];
 
             const emptyField = ensureRequiredFieldsAreNotEmpty({
                 httpRequest: httpRequest,
                 requiredFields: requiredFields
-            })
+            });
 
             if (emptyField) {
                 return badRequestResponse(new MissingParamError(emptyField));
