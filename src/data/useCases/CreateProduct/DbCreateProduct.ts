@@ -10,6 +10,12 @@ export class DbCreateProduct implements ICreateProduct {
     }
 
     public async create(productData: ICreateProductRequest): Promise<IProduct> {
+        const productExists = await this.productsRepository.getByTitle(productData.title);
+
+        if (productExists) {
+            throw new Error(`Produto ${productData.title} já está cadastrado.`)
+        }
+
         const product = await this.productsRepository.save(productData);
 
         return product;
