@@ -21,10 +21,6 @@ class FakeProductsRepository implements IProductsRepository {
 
         return new Promise(resolve => resolve(productWithId));
     }
-
-    public async list(): Promise<Array<IProduct>> {
-        
-    }
 }
 
 describe('DbCreateProduct UseCase', () => {
