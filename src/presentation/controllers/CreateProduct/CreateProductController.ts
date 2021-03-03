@@ -31,6 +31,10 @@ export class CreateProductController implements IController {
 
             const product = await this.createProduct.create({ title, description, categoryId, price });
 
+            if (!product) {
+                return badRequestResponse(new InvalidParamError('Este produto já existe.'));
+            }
+
             return okResponse(product);
         } catch (error) {
             console.log(error);

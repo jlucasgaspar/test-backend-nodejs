@@ -18,6 +18,6 @@ export class MongoProductsRepository implements IProductsRepository {
 
         const result = await productsCollection.findOne({ title });
 
-        return MongoHelper.map(result.ops[0]);
+        return result;
     }
 }

@@ -13,7 +13,7 @@ export class DbCreateProduct implements ICreateProduct {
         const productExists = await this.productsRepository.getByTitle(productData.title);
 
         if (productExists) {
-            throw new Error(`Produto ${productData.title} já está cadastrado.`)
+            return null;
         }
 
         const product = await this.productsRepository.save(productData);
